@@ -1,6 +1,6 @@
 README for Trove/1.4.x
 
-Copyright (c) 1997-2000 GO.com  http://opensource.go.com
+Copyright (c) 1997-2000 GO.com  http://teatrove.sourceforge.net
  
 Trove is an open source product. Refer to the license, which is based on the
 Apache license, for more details.
