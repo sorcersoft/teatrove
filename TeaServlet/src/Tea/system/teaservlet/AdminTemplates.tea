@@ -1,0 +1,204 @@
+<% template AdminTemplates()
+
+admin = getTeaServletAdmin()
+request = getRequest()
+reloadResult = getCompilationResults()
+if (reloadResult != null) {
+    alreadyLoading = reloadResult.alreadyReloading
+    errors = reloadResult.templateErrors
+    compiled = reloadResult.reloadedTemplateNames
+}
+else {
+    alreadyLoading = false
+    errors = null
+    compiled = null
+}
+templates = admin.knownTemplates
+reloadTime = admin.timeOfLastReload%> 
+<form action="<%request.requestURI%>" method="post">
+<input type="submit" value="Reload">&nbsp;&nbsp;&nbsp;
+<input type="hidden" name="subTemplate" value="system.teaservlet.AdminTemplates">
+<input type="checkbox" name="reloadTemplates" value="all">Recompile all&nbsp;&nbsp;&nbsp; 
+<% if (admin.clusteredServers != null) {
+    if (admin.clusteredServers.length > 0) {
+        '<input type="checkbox" name="cluster" value="true">Apply to cluster ('
+        call ClusterLink(admin)
+        ')'
+    }
+}%>
+<input type="hidden" name="reloadTemplates">
+</form>
+
+<%
+/*
+if (admin.reloadStatusOfServers.length > 0) {
+    '<font face="Arial" size="2">'
+    foreach (status in admin.reloadStatusOfServers) {
+        status.serverName ' - '
+        if (status.statusCode >= 300) {
+            '(' status.statusCode ') - <b>' status.message '</b>'
+        }
+        else {
+            status.message
+        }
+        '<p>'   
+    }
+    '<br>'
+    '</font>'
+} 
+*/
+if (alreadyLoading) {
+    '<font face="Arial" size="2">Reload already in progress, hang on a sec.</font><p>'
+}
+else {
+    if (errors != null and errors.length > 0) {
+        '<table width="100%" border="1" cellpadding="2" cellspacing="1">'
+        '<tr>'
+        '<td align="center" bgcolor="#C2C8D1"><font color="#000000" face="Arial" size="2"><b>Template Compilation Error Details</b></font></td>'
+        '</tr><tr>'
+        '<td align="center" bgcolor="#FF0000"><font color="#FFFF00" face="Arial" size="3"><b>No Templates Reloaded</b></font></td>'
+        '</tr>'
+
+        foreach(e in errors) {
+            if (e isa com.go.tea.engine.TemplateError) {
+                '<tr>'
+                '<td><font face="Arial" size="2">'
+                '<b>' e.sourceInfoMessage '</b>: ' e.errorMessage '</font><br><tt>'
+                call Clean(trimLeading(e.lineStart))
+                '<b>'
+                call Clean(e.errorStart)
+                '<u>'
+                call Clean(e.detail)
+                '</u>'
+                call Clean(e.errorEnd) 
+                '</b>'
+                call Clean(trimTrailing(e.lineEnd))
+                '</tt>'
+                '</td>'
+                '</tr>'
+            }
+        }
+        '</table>'
+        '<p>'
+    }
+    else if (compiled != null) {
+        '<font face="Arial" size="2">'
+
+        if (compiled.length == 0) {
+            'No templates need to be recompiled'
+        }
+        else {
+            'Recompiled templates:<p>'
+            foreach(templateName in compiled) {
+                '<b>' templateName '</b><br>'
+            }
+            '</table>'
+        }
+
+        '</font><p>'
+    }
+}
+
+path = request.requestURI
+extension = ""
+
+if (request.pathInfo != null) {
+    index = findFirst(path, request.pathInfo)
+}
+else { 
+    // look for any extensions like ".tea"
+    index = findLast(path, ".") 
+    if (index >= 0) {
+        extension = substring(path, index)
+        path = substring(path, 0, index)        
+    }
+    index = 0 
+}
+     
+if (index >= 0) {
+    path = substring(path, 0, index)
+}
+path = path & '/'
+
+if (request.parameters["useTable"] == "true") {%>
+
+<table width="100%" border="1" cellpadding="2" cellspacing="1">
+  <tr>
+    <td bgcolor="#737398"><font size="2" face="Arial" color="#FFFFFF"><b>
+    <%if (templates == null) {
+    'No'
+    }
+    else {
+        templates.length
+    } 
+    '&nbsp;Known Templates&nbsp;&nbsp;|&nbsp;&nbsp;'
+    if (reloadTime == null) {
+        'no reloads since system startup.'
+    }
+    else {
+        'last reload: ' reloadTime
+    }
+    '</b></font></td>'
+    '<td bgcolor="#737398" align="right">'
+        '<a href="'request.requestURI '?subTemplate='  
+        request.parameters["subTemplate"]
+        '"><font size="2" face="Arial" color="#FFFFFF"><b>Hide Parameters</b></font></a>'
+        '</td>'
+  '</tr>'
+  '<tr>'
+    '<td align="center" bgcolor="#C2C8D1"><font color="#000000" face="Arial" size="2">Template</font></td>'
+    '<td align="center" bgcolor="#C2C8D1"><font color="#000000" face="Arial" size="2">Parameters</font></td>'
+  '</tr>'        
+   
+    foreach (tea in templates) {
+       
+        uri = path & replace(tea.name, '.', '/') & extension
+        
+  %>
+  <tr>
+    <td><font face="Arial" size="2"><b><a href="<%uri%>"><%uri%></a></b></font></td>
+    <td><font face="Arial" size="2">
+      <% if (tea.loaded) {
+           call PrintParameters(tea.loadedTemplate.parameterTypes, tea.loadedTemplate.parameterNames)
+         }
+         else {
+           'N/A'
+         }%>&nbsp;
+          
+      </font>
+    </td>
+  </tr>
+  <%}%>
+</table>
+<%}
+else {
+    '<table width="100%" border="0" cellpadding="2" cellspacing="0">'
+      '<tr bgcolor="#737398" >'
+        '<td ><font size="2" face="Arial" color="#FFFFFF"><b>'
+        if (templates == null) {
+        'No'
+        }
+        else {
+            templates.length
+        }
+        '&nbsp;Known Templates&nbsp;&nbsp;|&nbsp;&nbsp;'
+         if (reloadTime == null) {
+            'no reloads since system startup.'
+         }
+        else {
+            'last reload:&nbsp;' reloadTime
+        }
+        '</b></font></td><td bgcolor="#737398" align="right">'
+        '<a href="'request.requestURI '?subTemplate='  
+        request.parameters["subTemplate"]
+        '&useTable=true"><font size="2" face="Arial" color="#FFFFFF"><b>Show Parameters</b></font></a>'
+        '</td></tr></table>'
+        '<font face="Arial" size="2"><b>'
+    foreach (tea in templates) {
+        uri = path & replace(tea.name, '.', '/') & extension
+        '<a href="' uri '">' uri '</a><br>'
+    }
+    '</b></font>'
+}
+
+

@@ -1,0 +1,57 @@
+<% template Depot() 
+request = getRequest()
+cluster = getClusterCacheInfo() 
+
+depot = getRegionCacheInfo()%>
+<table width="100%" border="1" cellpadding="2" cellspacing="1">
+
+<tr>
+    <td bgcolor="#737398" colspan="2"><font size="2" face="Arial" color="#FFFFFF">
+    <font size="2" face="Arial"><b>Region Cache Status
+    <% if (cluster != null and cluster.knownPeers.length > 0) {
+         'for the ' cluster.clusterName ' cluster'  
+    } %>
+    </b></font></td>    
+</tr><tr> 
+    <td align="center" bgcolor="#C2C8D1"><font color="#000000" face="Arial" size="2">Host</font></td>
+    <td align="center" bgcolor="#C2C8D1"><font color="#000000" face="Arial" size="2">Cache Size</font></td>
+</tr>
+<tr>
+    <td><font size="2" face="Arial">Local Cache</font></td><td><font size="2" face="Arial">
+    <%depot.size' item' 
+    if(depot.size != 1) {'s'} '</font></td></tr>'
+
+foreach (peer in cluster.knownPeers) {
+    '<tr><td><font size="2" face="Arial">'
+    peer.serverName '</font></td><td><font size="2" face="Arial">'
+    if (peer isa com.go.teaservlet.RegionCachingApplication.ClusterCacheInfo) {
+        info = peer.regionCacheInfo
+        if (info != null) {
+            items = info.size
+            items' item' 
+            if(items != 1) {'s'} '</font></td>'
+        }
+        else {
+            'RegionCacheInfo Unavailable'
+        }
+    }
+}
+/* cache test
+
+
+'Live Data: 'currentDate() ' -- Depot Size:'depot.size
+if (findFirst(request.queryString,"live") < 0) {
+cache(15000) {%><br>
+15 second cache: <%currentDate()' -- Depot Size:'depot.size
+        nocache() {
+            '<br>nested Live Data: 'currentDate() ' -- Depot Size:'depot.size
+        }
+     cache(5000) {'<br>5 second cache: ' currentDate()' -- Depot Size:'depot.size
+        nocache() {
+            '<br>doubly nested Live Data: 'currentDate() ' -- Depot Size:'depot.size
+        }
+    }
+'<br>back to 15 seconds ' currentDate()' -- Depot Size:'depot.size
+}
+}
+*/

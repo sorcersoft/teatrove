@@ -1,0 +1,21 @@
+<% template PrintMethodLink(java.beans.MethodDescriptor md, Integer target)
+'<A '
+if (target == 0) {
+        text = "<!-- -->" 
+
+ 'name='   
+}
+else if (target == 1){
+    text = replace(md.name,"$",".") 
+ 'href=Admin?subTemplate=system.teaservlet.ContextDetail&context='md.method.declaringClass.name 
+}
+else { 
+   text = replace(md.name,"$",".") 
+   'href='
+}
+'#' encodeParameter(md.method.name)
+foreach (param in md.parameterDescriptors) {
+    '-'
+    param.displayName
+}
+'>'text'</A>'

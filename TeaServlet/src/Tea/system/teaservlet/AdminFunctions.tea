@@ -1,0 +1,32 @@
+<% template AdminFunctions()
+admin = getTeaServletAdmin()
+%>
+<table border="1" cellpadding="2" cellspacing="1">
+  <tr>
+    <td bgcolor="#737398" colspan="2"><font size="2" face="Arial" color="#FFFFFF"><b>Functions</b></font></td>
+  </tr><tr>
+    <td align="center" bgcolor="#C2C8D1"><font color="#000000" face="Arial" size="2">Return</font></td>
+    <td align="center" bgcolor="#C2C8D1"><font color="#000000" face="Arial" size="2">Name and Params</font></td>
+  </tr>
+<%
+    foreach (function in admin.functions) {
+        '<tr><td valign="top" align="right"><font face="Arial" size="-1">'
+        call PrintClass(function.descriptor.method.returnType)
+        '</font></td><td valign="top" align="left">'
+        '<font face="Arial" size="2"><B>'
+        call PrintMethodLink(function.descriptor,1)'</B>('
+        call PrintParameterDescriptors(function.descriptor.method.parameterTypes, function.descriptor.parameterDescriptors, false) ')'
+        '</font><br>&nbsp;&nbsp;&nbsp;'
+        if (function.provider != null) {
+            '<font size="-1">also accessible by ' function.provider.contextPrefixName '.' replace(function.name,"$",".")'</font>'
+        }
+        
+        /*
+        if (function.descriptor.shortDescription != function.descriptor.displayName) {
+                getFirstSentence(function.descriptor.shortDescription)
+            }
+         */
+'</td></tr>'
+    }
+'</table>'
+%>

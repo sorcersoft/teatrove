@@ -1,0 +1,45 @@
+<% template BeanProperties(String bean)
+    info = getHandyClassInfo(bean)
+    
+    if (info.type == null) {
+        'Bean class not found: ' bean
+    }
+    else {        
+        props = info.teaBeanPropertyDescriptors
+        
+        '<table border="1" cellpadding="2" cellspacing="1">'
+        '<tr><td bgcolor="#737398" colspan="2">'
+        '<font size="2" face="Arial" color="#FFFFFF">'
+        'Properties of <b>' info.fullName '</font></td></tr>'
+
+        
+        if (info.description != "") {
+            '<tr><td bgcolor="#C2C8D1" colspan="2" align="left"><font color="#000000" face="Arial" size="2">'
+            'Description </font></td></tr>'
+            '<tr><td bgcolor="#FFFFFF" colspan="2" align="left"><font color="#000000" face="Arial" size="2">'
+            info.description
+            '</font></td></tr>'
+        }        
+        
+        '<tr><td bgcolor="#C2C8D1" align="center"><font color="#000000" face="Arial" size="2">Type</font></td><td bgcolor="#C2C8D1" align="center"><font color="#000000" face="Arial" size="2">Name</font></td></tr>'
+        foreach (property in props) {
+            if(property isa java.beans.PropertyDescriptor) {
+                
+                if (property isa com.go.tea.util.KeyedPropertyDescriptor) {
+                    propertyType = property.keyedPropertyType;
+                }
+                else {
+                    propertyType = property.propertyType;
+                }
+                
+                if (propertyType != null) {
+                    '<tr><td align="right"><font color="#000000" face="Arial" size="2">'
+                    call PrintClassLink(propertyType) '</font></td>'
+                    '<td><font color="#000000" face="Arial" size="2">'
+                    property.name '</font></td></tr>'
+                }
+                
+            }
+        }
+        '</table>'
+    }%>

@@ -1,0 +1,19 @@
+<% template PrintClass(Class class)
+    if (class.array) {
+        call PrintClass(class.componentType) '[]'
+    }
+    else {
+        name = class.name
+        if (name == "com.go.tea.runtime.Substitution") {
+            name = '<b>...</b>'
+        }
+		else if (startsWith(name, "java.lang.")) {
+			name = substring(name, "java.lang.".length)
+		}
+		else if (startsWith(name, "java.util.")) {
+			name = substring(name, "java.util.".length)
+		}
+
+        replace(name, "$", ".")
+    }           
+%>

@@ -1,0 +1,34 @@
+<% 
+
+/*
+ * ContextClassNames.tea
+ *
+ * Copyright (c) 2001 Walt Disney Internet Group.  All Rights Reserved.
+ *
+ * Original author: markm 
+ *
+ * $Workfile:: ContextClassNames.tea                                          $
+ *   $Author$
+ * $Revision$
+ *     $Date$
+ *
+ * Descritpion:  Returns a semicolon-delimited list of all context class 
+ * names used by this TeaServlet instance.
+ */
+
+template ContextClassNames() 
+
+// The default context, used in all TeaServlet instances
+contextNames = "com.go.teaservlet.HttpContext;"
+
+admin = getTeaServletAdmin()
+foreach (app in admin.applications) {
+    contextType = app.contextType
+    if (contextType != null) {
+        contextNames = contextNames & contextType.name & ";"
+    }
+}
+
+// Return the semicolon-delimited list of context class names     
+contextNames      
+%>

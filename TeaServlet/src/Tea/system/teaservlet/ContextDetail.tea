@@ -1,0 +1,93 @@
+<% template ContextDetail(String context)
+admin = getTeaServletAdmin()
+
+
+            info = getHandyClassInfo(context)
+%>        
+<H2>
+
+
+<%
+packaged = false
+if (info.package != null) {
+    packaged = true
+    '<FONT SIZE="-1">'info.package'</FONT><BR>'
+}
+info.name
+%></H2>
+<%info.descriptionFirstSentence
+%>
+<!-- ========== METHOD SUMMARY =========== -->
+
+
+
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+
+<TR BGCOLOR="#C2C8D1">
+
+<TD COLSPAN=2><FONT SIZE="+2">
+
+<B>Method Summary</B></FONT></TD>
+
+</TR> 
+
+    <%descriptions = info.teaContextMethodDescriptors
+    
+    foreach (metDesc in descriptions) {
+        if (metDesc isa java.beans.MethodDescriptor) {
+         
+            '<TR BGCOLOR="white" >'
+            '<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">'
+            '<CODE>&nbsp;' call PrintClassLink(metDesc.method.returnType)'</CODE></FONT></TD>'
+            '<TD><CODE><B>'call PrintMethodLink(metDesc,-1)'</B>(' 
+            call PrintParameterDescriptors(metDesc.method.parameterTypes, metDesc.parameterDescriptors,true)')</CODE><BR>'
+            '&nbsp;&nbsp;&nbsp;&nbsp;'
+
+          getFirstSentence(metDesc.shortDescription)
+            
+            '<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>'
+
+        '</TR>'}
+}%>
+</TABLE>
+
+<br>&nbsp;
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#C2C8D1">
+
+<TD ><FONT SIZE="+2">
+
+<B>Method Detail</B></FONT></TD>
+
+</TR></TABLE>
+
+    <%foreach (metDesc in descriptions) {
+        if (metDesc isa java.beans.MethodDescriptor) {
+
+            '<B><H3>'call PrintMethodLink(metDesc,0) metDesc.method.name '</H3></B>'
+            '<CODE>' call PrintClassLink(metDesc.method.returnType)'<B>&nbsp;' metDesc.method.name '</B>(' 
+            call PrintParameterDescriptors(metDesc.method.parameterTypes, metDesc.parameterDescriptors,true)')</CODE>'
+            if (metDesc.shortDescription != metDesc.displayName) {
+                '<blockquote>'metDesc.shortDescription
+                    if (metDesc.parameterDescriptors.length > 0) {
+                        '<blockquote><B>Parameters:</B><BR>&nbsp;&nbsp;&nbsp;&nbsp;<CODE>'
+                        foreach (param in metDesc.parameterDescriptors) {
+                            param.name ' - ' param.displayName
+                        }
+                        '</CODE></blockquote>'
+                    }
+                    '<blockquote><B>Returns:</B><BR>&nbsp;&nbsp;&nbsp;&nbsp;<CODE>'
+                        call PrintClass(metDesc.method.returnType)
+                    '</CODE></blockquote>'
+                    '<blockquote><B>Declared in:</B><BR>&nbsp;&nbsp;&nbsp;&nbsp;<CODE>'
+                        call PrintClass(metDesc.method.declaringClass)
+                    '</CODE></blockquote>'
+                '</blockquote>'
+            '</blockquote>'}
+            '<hr>'}
+
+     
+    }
+
+
+

@@ -1,0 +1,11 @@
+<% template PrintClassLink(Class class)
+        info = getHandyClassInfo(class)
+    if (class.name == "com.go.tea.runtime.Substitution") {
+        info.fullName
+    }
+    else {
+        '<a href="Admin?subTemplate=system.teaservlet.BeanProperties&bean=' class.name '">'
+        info.fullName
+        '</a>'
+    }
+%>

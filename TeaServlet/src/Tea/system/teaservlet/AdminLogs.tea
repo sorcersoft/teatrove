@@ -1,0 +1,17 @@
+<% template AdminLogs()
+
+log = getTeaServletAdmin().log%>
+
+<table width="100%" border="1" cellpadding="2" cellspacing="1">
+  <tr>
+    <td bgcolor="#737398" colspan="6"><font size="2" face="Arial" color="#FFFFFF"><b>Logging</b></font>&nbsp;</td>
+  </tr><tr>
+    <td align="center" bgcolor="#C2C8D1"><font color="#000000" face="Arial" size="2">Name</font></td>
+    <td align="center" bgcolor="#C2C8D1"><font color="#000000" face="Arial" size="2">Enabled</font></td>
+    <td align="center" bgcolor="#C2C8D1"><font color="#000000" face="Arial" size="2">Debug</font></td>
+    <td align="center" bgcolor="#C2C8D1"><font color="#000000" face="Arial" size="2">Info</font></td>
+    <td align="center" bgcolor="#C2C8D1"><font color="#000000" face="Arial" size="2">Warn</font></td>
+    <td align="center" bgcolor="#C2C8D1"><font color="#000000" face="Arial" size="2">Error</font></td>
+  </tr>
+  <%call AdminLog(log, "", false, false, false, false, false)%>
+</table>  

@@ -1,0 +1,30 @@
+<% template AdminLogSwitch(com.go.trove.log.Log log, 
+                           Boolean grayedOut, Boolean enabled, String type)
+
+'<td align="center"'
+if (grayedOut) {
+    'bgcolor="#C2C8D1"'
+}
+'>'
+
+if (enabled) {
+    '<font face="Arial" size="2">YES&nbsp;&nbsp;</font>'
+}
+else {
+    '<font face="Arial" size="2" color="red">NO&nbsp;&nbsp;</font>'
+}
+
+'<font face="Arial" size="1"><a href=AdminLogs?log='
+getObjectIdentifier(log) '&' type '=' (not enabled) '>'
+
+if (enabled) {
+	'(disable)'
+}
+else {
+	'(enable)'
+}
+
+
+'</font></td>'
+    
+%>

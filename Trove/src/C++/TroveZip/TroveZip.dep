@@ -1,0 +1,35 @@
+# Microsoft Developer Studio Generated Dependency File, included by TroveZip.mak
+
+".\zlib-1.1.3\adler32.c" : \
+	".\zlib-1.1.3\zconf.h"\
+	".\zlib-1.1.3\zlib.h"\
+	
+
+".\zlib-1.1.3\deflate.c" : \
+	".\zlib-1.1.3\deflate.h"\
+	".\zlib-1.1.3\zconf.h"\
+	".\zlib-1.1.3\zlib.h"\
+	".\zlib-1.1.3\zutil.h"\
+	
+
+.\Deflater.cpp : \
+	".\com_go_trove_util_Deflater.h"\
+	".\jni.h"\
+	".\jni_md.h"\
+	".\zlib-1.1.3\zconf.h"\
+	".\zlib-1.1.3\zlib.h"\
+	
+
+".\zlib-1.1.3\trees.c" : \
+	".\zlib-1.1.3\deflate.h"\
+	".\zlib-1.1.3\trees.h"\
+	".\zlib-1.1.3\zconf.h"\
+	".\zlib-1.1.3\zlib.h"\
+	".\zlib-1.1.3\zutil.h"\
+	
+
+".\zlib-1.1.3\zutil.c" : \
+	".\zlib-1.1.3\zconf.h"\
+	".\zlib-1.1.3\zlib.h"\
+	".\zlib-1.1.3\zutil.h"\
+	

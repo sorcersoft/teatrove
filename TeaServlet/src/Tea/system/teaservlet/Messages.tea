@@ -1,0 +1,42 @@
+<% 
+
+/*
+ * Messages.tea
+ *
+ * Copyright (c) 2001 Walt Disney Internet Group.  All Rights Reserved.
+ *
+ * Original author: jonathanc 
+ *
+ * $Workfile:: Messages.tea                                                   $
+ *   $Author$
+ * $Revision$
+ *     $Date$
+ *
+ *
+ * Provides a place for developers and operations personnel to leave notes on a server.
+ */
+
+template Messages(String ID, String message, Integer lifespan) 
+if (ID == null) {ID = "dork"}
+if (lifespan == null) {lifespan = 0}
+noteList = addNote(ID, message, lifespan)
+
+if (noteList != null and not noteList.empty) {
+
+    '<textarea cols="60" rows="10" name="noteDisplay" wrap="soft">'
+    foreach (note in noteList) {
+        if (note isa com.go.teaservlet.util.ServerNote) {
+            note.timestamp ': ' note.contents & "\n"
+        }
+    }
+    '</textarea>'
+}
+else {%>
+no notes found<br>
+<%}%>
+<form action="Messages">
+    <input type=text name="message" size="40"><br>
+    Message duration <input type=text name="lifespan" size="6" value="120"> seconds<br>
+    <input type="submit" value="Post Message"><input type="reset">
+</form>
+    

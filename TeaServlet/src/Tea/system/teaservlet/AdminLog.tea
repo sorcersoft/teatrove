@@ -1,0 +1,30 @@
+<% template AdminLog(com.go.trove.log.Log log, String indent,
+                     Boolean grayedOut,
+                     Boolean debugGrayedOut, Boolean infoGrayedOut,
+                     Boolean warnGrayedOut, Boolean errorGrayedOut)
+
+    grayedOut = grayedOut or not log.enabled
+    debugGrayedOut = grayedOut or debugGrayedOut or not log.debugEnabled
+    infoGrayedOut = grayedOut or infoGrayedOut or not log.infoEnabled
+    warnGrayedOut = grayedOut or warnGrayedOut or not log.warnEnabled
+    errorGrayedOut = grayedOut or errorGrayedOut or not log.errorEnabled
+%>
+  <tr>
+    <td><font face="Arial" size="2"><b><%
+      indent log.name
+      if (indent == "") {
+          '[<a href=LogViewer>view</a>]'
+      }
+      '</b></font></td>'
+      call AdminLogSwitch(log, grayedOut, log.enabled, "enabled")
+      call AdminLogSwitch(log, debugGrayedOut, log.debugEnabled, "debug")
+      call AdminLogSwitch(log, infoGrayedOut, log.infoEnabled, "info")
+      call AdminLogSwitch(log, warnGrayedOut, log.warnEnabled, "warn")
+      call AdminLogSwitch(log, errorGrayedOut, log.errorEnabled, "error")
+    %>
+  </tr>
+<%foreach (child in log.children) {
+    call AdminLog(child, indent & "&nbsp;&nbsp;", grayedOut,
+                  debugGrayedOut, infoGrayedOut,
+                  warnGrayedOut, errorGrayedOut);
+}%>
